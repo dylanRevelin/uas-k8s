@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: larev1/q-backend:v1
+        image: larev1/q-backend:latest
         imagePullPolicy: Always
         resources:
           requests:
@@ -83,7 +83,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: larev1/q-frontend:v1
+        image: larev1/q-frontend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
