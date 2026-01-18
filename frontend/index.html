@@ -1,33 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Q-Flow Update v2</title>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #eef2f3; }
-        .box { background: white; padding: 30px; border-radius: 15px; display: inline-block; margin-top: 50px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        button { padding: 15px 25px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; }
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        background: #eef2f3;
+      }
+      .box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        display: inline-block;
+        margin-top: 50px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      button {
+        padding: 15px 25px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="box">
-        <h1>Q-Flow Antrean v2</h1>
-        <p>Nomor Antrean Sekarang:</p>
-        <h1 id="num" style="font-size: 80px; color: #007bff;">0</h1>
-        <button onclick="ambil()">Ambil Antrean Baru</button>
+      <h1>Q-Flow Antrean hardianto</h1>
+      <p>Nomor Antrean Sekarang:</p>
+      <h1 id="num" style="font-size: 80px; color: #007bff">0</h1>
+      <button onclick="ambil()">Ambil Antrean Baru</button>
     </div>
     <script>
-        const API = "http://localhost:30001"; // Port NodePort Backend
-        async function update() {
-            const r = await fetch(`${API}/current`);
-            const d = await r.json();
-            document.getElementById('num').innerText = d.current;
-        }
-        async function ambil() {
-            await fetch(`${API}/next`, {method:'POST'});
-            update();
-        }
-        setInterval(update, 2000);
+      const API = "http://localhost:30001"; // Port NodePort Backend
+      async function update() {
+        const r = await fetch(`${API}/current`);
+        const d = await r.json();
+        document.getElementById("num").innerText = d.current;
+      }
+      async function ambil() {
+        await fetch(`${API}/next`, { method: "POST" });
         update();
+      }
+      setInterval(update, 2000);
+      update();
     </script>
-</body>
+  </body>
 </html>
