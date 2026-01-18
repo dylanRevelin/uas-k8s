@@ -83,7 +83,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: larev1/q-frontend:8876a1ef25e204d7f307f7d074c64867e26a7689
+        image: larev1/q-frontend:581c1a94de7b416f34b84d415694498f0c8239ff
         imagePullPolicy: Always
         ports:
         - containerPort: 80
