@@ -19,6 +19,4 @@ app.post('/next', async (req, res) => {
     res.send({ your_number: nextCount });
 });
 
-app.get('/health', (req, res) => res.status(200).send('OK'));
-
 app.listen(3000, () => console.log('Backend on port 3000'));
