@@ -1,11 +1,14 @@
-name: CI/CD Pipeline UAS
+name: CI/CD GitOps UAS
 
 on:
   push:
-    branches: [ "main" ] # Robot jalan tiap Anda push ke branch main
+    branches: [ "main" ]
+
+permissions:
+  contents: write
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Code
@@ -17,12 +20,22 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and Push Backend
+    # 1. Build dengan tag unik menggunakan ID commit (SHA)
+    - name: Build and Push
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/q-backend:latest ./backend
-        docker push ${{ secrets.DOCKER_USERNAME }}/q-backend:latest
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/q-frontend:${{ github.sha }} ./frontend
+        docker push ${{ secrets.DOCKER_USERNAME }}/q-frontend:${{ github.sha }}
 
-    - name: Build and Push Frontend
+    # 2. Edit file deployment.yaml secara otomatis (Trik A)
+    - name: Update Kubernetes Manifest
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/q-frontend:latest ./frontend
-        docker push ${{ secrets.DOCKER_USERNAME }}/q-frontend:latest
+        sed -i "s|image: ${{ secrets.DOCKER_USERNAME }}/q-frontend:.*|image: ${{ secrets.DOCKER_USERNAME }}/q-frontend:${{ github.sha }}|g" k8s/deployment.yaml
+
+    # 3. Push kembali perubahan file YAML ke GitHub agar ArgoCD bangun
+    - name: Commit and Push YAML changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add k8s/deployment.yaml
+        git commit -m "chore: update image tag to ${{ github.sha }} [skip ci]" || echo "No changes to commit"
+        git push origin main
