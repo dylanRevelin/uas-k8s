@@ -5,7 +5,6 @@ const app = express();
 
 app.use(cors());
 
-// Koneksi ke Redis di Kubernetes
 const client = redis.createClient({ url: 'redis://redis-service:6379' });
 client.connect().catch(console.error);
 
